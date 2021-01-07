@@ -1,26 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>JSengine</title>
+	<title>Space Game</title>
+	<script src="Renderer.js"></script>
+	<script src="Entity.js"></script>
 </head>
 <body>
+	<script type="text/javascript">
+		var R = new Renderer();
 
-<script src="game/math/Matrix.js"></script>
+		// STARS
+		
+		var stars = [];
+		for(var i = 0; i < 1000; i++) {
+			var x = R.canvas.width * Math.random();
+			var y = R.canvas.height * Math.random();
+			var r = 5 * Math.random() + 1;
 
-<script src="game/Input.js"></script>
-<script src="game/CanvasRenderer.js"></script>
-<script src="game/Game.js"></script>
+			stars.push(new Star(x, y, r));
+		}
 
-<script src="engine/Clock.js"></script>
-<script src="engine/Engine.js"></script>
+		function RandomPlanet(x, y) {
+			var size = 8 * Math.random() + 2;
 
-<script type="text/javascript">
-	var game = new Game(200, 200);
+			var red = 255 * Math.random();
+			var green = 255 * Math.random();
+			var blue = 255 * Math.random();
+			var color = "rgb(" + red + ", " + green + ", " + blue + ")";
 
-	var engine = new Engine(game, 60);
-	engine.Start();
+			return new World(x, y, size, color);
+		}
 
-</script>
+		function RandomMoon(planet) {
+			var randomOrbit = 2 * Math.PI * Math.random();
+			var randomDistance = 300 * Math.random() + 200;
+
+			var x = R.canvas.width / 2 + randomDistance * Math.cos(randomOrbit);
+			var y = R.canvas.height / 2 + randomDistance * Math.sin(randomOrbit);
+
+			var size = (planet.size - 2) * Math.random();
+
+			var red = 255 * Math.random();
+			var green = 255 * Math.random();
+			var blue = 255 * Math.random();
+			var color = "rgb(" + red + ", " + green + ", " + blue + ")";
+
+			return new World(x, y, size, color);
+		}
+
+		// PLANET
+
+		var worlds = [];
+
+		var x = R.canvas.width / 2;
+		var y = R.canvas.height / 2;
+		var planet = RandomPlanet(x, y);
+		worlds.push(planet);
+
+		// MOONS
+
+		for(var i = 0; i < 5; i++) {
+			worlds.push(RandomMoon(planet));
+		}
+
+		// SHIPS
+
+		var ship = new Ship("shuttle", 800, 500, 2 * Math.PI * Math.random());
+
+		// ENGINE
+
+		setInterval(function() {
+			R.Clear("black");
+
+			stars.forEach(function(star) {
+				star.Update(10);
+				star.Render(R);
+			});
+
+			worlds.forEach(function(world) {
+				world.Render(R);
+			});
+
+			ship.Render(R);
+		}, 10);
+	</script>
 </body>
 </html>
