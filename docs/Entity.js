@@ -33,8 +33,36 @@ class World {
 		this.color = color;
 	}
 
+	static RandomPlanet(x, y) {
+		var size = 8 * Math.random() + 4;
+
+		var red = 255 * Math.random();
+		var green = 255 * Math.random();
+		var blue = 255 * Math.random();
+		var color = "rgb(" + red + ", " + green + ", " + blue + ")";
+
+		return new World(x, y, size, color);
+	}
+
+	static RandomMoon(planet) {
+		var randomOrbit = 2 * Math.PI * Math.random();
+		var randomDistance = 100 * Math.random() + 2 * planet.size * 10;
+
+		var x = planet.x + randomDistance * Math.cos(randomOrbit);
+		var y = planet.y + randomDistance * Math.sin(randomOrbit);
+
+		var size = (planet.size - 3) * Math.random();
+
+		var red = 255 * Math.random();
+		var green = 255 * Math.random();
+		var blue = 255 * Math.random();
+		var color = "rgb(" + red + ", " + green + ", " + blue + ")";
+
+		return new World(x, y, size, color);
+	}
+
 	Render(renderer) {
-  		renderer.DrawPlanet(this.x, this.y, this.size, this.color);
+  		renderer.DrawWorld(this.x, this.y, this.size, this.color);
   	}
 }
 
@@ -47,5 +75,57 @@ class Ship extends Entity {
 
 	Render(renderer) {
 		renderer.DrawShip(this.type, this.x, this.y, this.direction);
+	}
+}
+
+class System {
+	constructor() {
+		this.size = 1000;
+
+		// STARS
+		this.stars = [];
+		for(var i = 0; i < 1000; i++) {
+			var x = this.size * Math.random();
+			var y = this.size * Math.random();
+			var r = 5 * Math.random() + 1;
+
+			this.stars.push(new Star(x, y, r));
+		}
+
+		// PLANET
+
+		this.worlds = [];
+
+		var x = this.size / 2;
+		var y = this.size / 2;
+
+		var planet = World.RandomPlanet(x, y);
+		this.worlds.push(planet);
+
+		// MOONS
+
+		for(var i = 0; i < 5; i++) {
+			this.worlds.push(World.RandomMoon(planet));
+		}
+
+	}
+
+	Update(dt) {
+		this.stars.forEach(function(star) {
+			star.Update(10);
+		});
+
+		this.worlds.forEach(function(world) {
+		});
+	}
+
+	Render(renderer) {
+		this.stars.forEach(function(star) {
+			star.Render(R);
+		});
+
+		this.worlds.forEach(function(world) {
+			world.Render(R);
+		});
 	}
 }
