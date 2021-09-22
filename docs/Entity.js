@@ -34,7 +34,7 @@ class World {
 	}
 
 	static RandomPlanet(x, y) {
-		var size = 8 * Math.random() + 4;
+		var size = 2 * Math.random() + 4;
 
 		var red = 255 * Math.random();
 		var green = 255 * Math.random();
@@ -46,12 +46,12 @@ class World {
 
 	static RandomMoon(planet) {
 		var randomOrbit = 2 * Math.PI * Math.random();
-		var randomDistance = 100 * Math.random() + 2 * planet.size * 10;
+		var randomDistance = 300 * Math.random() + 2 * planet.size * 10;
 
 		var x = planet.x + randomDistance * Math.cos(randomOrbit);
 		var y = planet.y + randomDistance * Math.sin(randomOrbit);
 
-		var size = (planet.size - 3) * Math.random();
+		var size = (planet.size - 4) * Math.random() + 1;
 
 		var red = 255 * Math.random();
 		var green = 255 * Math.random();

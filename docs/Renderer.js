@@ -4,9 +4,13 @@ class Renderer {
 		this.canvas = this.window.canvas;
 		this.ctx = this.canvas.getContext("2d");
 
-		this.scale = 0.5;
 		this.cameraX = 0;
 		this.cameraY = 0;
+
+		var scrollbarSize = 0;
+		this.canvas.width = window.innerWidth - scrollbarSize;
+		this.canvas.height = window.innerHeight - scrollbarSize;
+		this.scale = Math.min(this.canvas.width, this.canvas.height) / 1000;
 	}
 
 	MoveCamera(x, y) {
@@ -105,7 +109,7 @@ class Window {
 		var scrollbarSize = 0;
 		this.canvas.width = window.innerWidth - scrollbarSize;
 		this.canvas.height = window.innerHeight - scrollbarSize;
-		this.renderer.scale = Math.max(this.canvas.width, this.canvas.height) / 1000;
+		this.renderer.scale = Math.min(this.canvas.width, this.canvas.height) / 1000;
 
 		if(window.attachEvent) {
 			var that = this;
@@ -113,7 +117,7 @@ class Window {
         		that.canvas.width = window.innerWidth - scrollbarSize;
 				that.canvas.height = window.innerHeight - scrollbarSize;
 
-				that.renderer.scale = Math.max(that.canvas.width, that.canvas.height) / 1000;
+				that.renderer.scale = Math.min(that.canvas.width, that.canvas.height) / 1000;
     		});
 		}
 		else if(window.addEventListener) {
@@ -122,7 +126,7 @@ class Window {
         		that.canvas.width = window.innerWidth - scrollbarSize;
 				that.canvas.height = window.innerHeight - scrollbarSize;
 
-				that.renderer.scale = Math.max(that.canvas.width, that.canvas.height) / 1000;
+				that.renderer.scale = Math.min(that.canvas.width, that.canvas.height) / 1000;
     		}, true);
 		}
 		else {
